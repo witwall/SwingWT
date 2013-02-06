@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="test" name="Run Swing/AWT Mauve Tests">
+	<!--
+		SwingWT
+		Copyright(c) 2004 Daniel Naab
+
+		Ant build script for Mauve test suite.
+
+		$Log: mauve.xml,v $
+		Revision 1.1  2004/05/07 00:00:47  dannaab
+		Integrate Mauve test suite into build system
+		
+        -->
+
+    <property environment="env"/>
+
+    <!-- Default target -->
+    <target name="test" depends="init,mauve_sync,mauve_build,run_tests"/>
+
+    <!-- Set properties corresponding to directories we need -->
+    <property name="dest" value="."/>
+    <property name="src" value="mauve"/>
+    <property name="build" value="mauve/build"/>
+    <property name="swingwt_jar" value="lib/swingwt.jar"/>
+    <property name="rt_jar" value="${java.home}/lib/rt.jar"/>
+
+    <!-- Define some required paths -->
+    <path id="_java_path">
+        <pathelement path="${java.home}/bin/java.exe"/>
+    </path>
+    <path id="_javac_path">
+        <pathelement path="${java.home}/bin/javac.exe"/>
+    </path>
+    <path id="_boot_class_path">
+        <pathelement path="${swingwt_jar}"/>
+        <pathelement path="${rt_jar}"/>
+    </path>
+
+    <target name="init">
+        <!-- Convert paths to unix form so make doesn't puke on Windows -->
+        <pathconvert dirsep="${file.separator}" pathsep="${path.separator}" property="java_path" refid="_java_path"/>
+        <pathconvert dirsep="${file.separator}" pathsep="${path.separator}" property="javac_path" refid="_javac_path"/>
+        <pathconvert dirsep="${file.separator}" pathsep="${path.separator}" property="boot.class.path" refid="_boot_class_path"/>
+
+        <!-- Parameters to Mauve's configure script -->
+
+        <property name="java_param" value="${java_path} -bootclasspath ${boot.class.path}"/>
+        <property name="javac_param" value="${javac_path} -bootclasspath ${boot.class.path}"/>
+
+
+        <!-- Create the mauve dir if it doesn't exist.
+             This allows us to use "cvs -d update" event if we haven't checked out yet. -->
+
+        <mkdir dir="${src}"/>
+    </target>
+
+    <target name="mauve_sync" depends="init" description="Update the local Mauve dir from CVS">
+        <cvs command="update -d"
+             cvsRoot=":pserver:anoncvs@sources.redhat.com:/cvs/mauve"
+             compressionlevel="9" package="mauve"
+             dest="${dest}"/>
+    </target>
+
+    <target name="mauve_build" depends="init" description="Build the Mauve sources">
+        <!-- Run gnu configure -->
+        <exec dir="${src}" executable="sh">
+            <env key="JAVA" value="${java_param}"/>
+            <env key="JAVAC" value="${javac_param}"/>
+            <arg line="configure"/>
+        </exec>
+
+        <!-- Run the mauve compile target -->
+        <ant dir="${src}" inheritAll="false" target="compile"/>
+    </target>
+
+    <target name="run_tests" depends="init" description="Run the tests">
+        <taskdef name="mauve" classname="gnu.anttask.RunTests" classpath="${build}"/>
+        <mauve debug="on"
+               verbose="false"
+               haltonfailure="false"
+               srcdir="${src}"
+               testJDK="JDK1.4"
+               testJDBC="JDBC2.0"
+               failonerror="true">
+            <fileset dir="${build}" includes="gnu/testlet/java/awt/**"/>
+            <fileset dir="${build}" includes="gnu/testlet/java/applet/**"/>
+            <fileset dir="${build}" includes="gnu/testlet/javax/**"/>
+        </mauve>
+    </target>
+</project>

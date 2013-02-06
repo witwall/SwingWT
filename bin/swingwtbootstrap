@@ -1,0 +1,3 @@
+#!/bin/sh
+$JAVA_HOME/bin/java -Djava.library.path=../lib/linux_gtk2/ -cp ../lib/bcel.jar:../lib/commons-lang.jar:../lib/linux_gtk2/swt-mozilla.jar:../lib/linux_gtk2/swt.jar:../lib/linux_gtk2/swt-pi.jar:../lib/swingwt.jar:$1 swingwt.classloader.SwingWTBootstrap $2
+

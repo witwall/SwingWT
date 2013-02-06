@@ -1,0 +1,1464 @@
+==== 0.91
+
+2012: (Thiago Tonelli)
+
+Declared many classes, methods and fields needed to fully compile original SwingSet for java 1.4 and 6.
+Implemented a wrapping identity map in SwingWTUtils. The map keeps track of windows and their peers.
+Implemented Frame.getFrames(), which used the identity map to get a Frame based on the available frames.
+SwingWTUtils.stopEventDispatchRunning wakes Display up to make sure application does not hang.
+Implemented java.awt.Robot partially.
+Fixing signatures of JOptionPane.showInputDialog, showMessageDialog, showConfirmDialog and showOptionDialog methods to take Components instead of Containers, like original swing.
+Adding Accessible interface to some classes missing it, like JCheckBox, JSlider.
+Implemented JColorChooser with a dialog.
+Implemented DefaultSingleSelectionModel and refactored JTabbedPane to use it.
+Cleaned up code to handle mnemonics and text in buttons. Now wrapper fields carry the separated values, and the peer receives the combined string.
+Implemented minimum hierarchy for Accessibility API; fixing duplicated accessibleContext field.
+Major refactoring of buttons (AbstractButton, its sub-types, and ButtonGroup). Code was cleaned up, ButtonGroup is now working properly and new features were added.
+ToggleButton and its sub-types can now carry icons (using the TOGGLE style in SWT, which does not look great, but at least shows the icon).
+Fixed calculation of Component.getLocationOnScreen().
+Some documentation for layout managers, Component, Container and size-related classes (added while trying to understand the code).
+Refactored BoxLayout to be smarter about recalculations.
+Some fixes to size in buttons calculations (e.g., JButtons with HTML should have unlimited max width).
+Refactored Component and other classes to use thread-safe pattern without fields and to make code simpler by standardizing peer availability checks.
+Optimized computations of size and bounds in Component, specially by avoiding duplicate calls to the peer (e.g., by calling getWidth() and getHeight() instead of computing getSize() and getting the values from the returned dimension).
+Changing call to Container.queuedValidate(). Added to Window.create and guarded in Container.doAdd. This ensures that invalidate() is called only once during GUI construction.
+Cleaned up old thread safe accessors in JTabbedPane.
+In JTabbedPane, if the parent has a preferred size set by the user, use it.
+Fixes to TitledBorder, to make it more compact and closer to Swing (in Linux, not sure about other platforms).
+Setting default location for Windows to be the origin.
+Implemented Container.findComponentAt() to look for the most specific component at a certain point. Use that in mouse over events to compute target.
+Implemented Polygon class appropriately. Now Tooltip demo shows correct tooltip depending on the position of the mouse.
+IconLabel now gets its background color from a parent.
+Stripping HTML code from tooltips since SWT cannot interpret HTML.
+Implementing additional icons for buttons.
+
+==== 0.90
+
+2011:
+
+Fixed ImageIO.read(*) methods (SWT throws exception if you try to construct a 0x0 Image).
+Added ImageIO.read(File) method and fixed other 
+Added various stub methods to swingwt.awt.image.* classes.
+Added JFileChooser.getIcon() method.
+Added Window.isFocused() method.
+Reworked Window.pack() logic to work better if the window hasn't yet been shown.
+Rewrote JLabels to properly support icons and labels and correct alignment.
+Added LabelTypes demo showing different types of labels.
+Added FontList demo showing a list of available fonts.
+When stripping HTML for JLabels, convert <br>'s to \n's.
+Fixed incorrect y position when drawing text in Java2D implementation.
+Fixed text drawing transparency in Java2D implementation.
+Fixed default title of JOptionPane.showMessageDialog() and made the call block like it's supposed to.
+Added various stub methods to Drag and Drop classes.
+Added HierarchyListener/HierarchyEvent stub classes and related methods to Component.
+Added missing methods on LineBorder and TitledBorder.
+TitleBorder vertical text centering will now be based on the Font/size of the title.
+Implemented CompoundBorder.
+Implement Component.[sg]etAlignment[XY]() methods.
+Various fixes to BoxLayout layout algorithms and related class SizeRequirements.
+Fixed a problem with Container.removeAll().
+Container will now add its components to the layout earlier, so that get*Size() methods can return accurate values before peers are available.
+Added a line border to JScrollPanes that do not wrap a JList.
+Added class ScrollPaneLayout.
+JTree now uses isPathEditable() to tell if a node is editable, which can be overridden by subclasses.
+Fixed re-layout of JSplitPane components when adding and/or replacing them.
+Fixed Frame.setResizable(false) to work correctly.
+Made JComponent.computePreferredSize() take into account the border insets if a platform border isn't in use.
+Made JComponent.getInsets() return the border insets if available, or empty Insets otherwise.
+Made getMaximumSize() and getMinimumSize() return preferred size if the min/max size hasn't been set explicitly.
+Added Insets.toString() method.
+Refactored size and location getters and setters to be all be based on getBounds()/setBounds().
+Made it easier to override specific ShellListener events on Window subclasses.
+JRootPane's getPreferredSize/getMinimumSize()/getMaximumSize() will now return the values of the content pane.
+Fixed calling setInedeterminate() on a JProgressBar after the peer has already been created.
+Fixed getMaximum()/getMinimum()/getValue() getters on JProgressBar.
+Allow JOptionPane.showMessageDialog() with null message,
+Fixed FontMetrics to use the correct font.
+Added Font.toString().
+Added font size conversion code between Swing and SWT fonts, since they do not use the same units.
+Component.invalidate() will now invalidate all parents. This is now managed by an invalidation queue in SwingWTUtils.
+Implemented JTabbedPane.setSelectedComponent() and JTabbedPane.computePreferredSize().
+Added support for alpha values on swingwt.awt.Color.
+Fixed swingwt.awt.Color constructors taking float values.
+Made background / foreground color methods on Window forward to the root pane.
+Refactoring of Component background color setting.
+Changed getBackgroundSet() and getForegroundSet() on Component to isBackgroundSet() and isForegroundSet() to match Swing.
+Added Component methods isMinimumSizeSet(), isMaximumSizeSet(), isPreferredSizeSet().
+Implement JSlider's getMaximumSize().
+Fixed signature of SwingUtilities.invokeAndWait().
+Made SwingUtilities.invokeLater() print exceptions thrown by the Runnable.
+Added support for using Cocoa SWT on Mac OS X.
+Fixed NPE when calling getBounds() before peer was created.
+Fixed NPE when calling JRootPane.setDefaultButton(null).
+Fixed NPE in ImageIcon constructor.
+Fixed NPE in SwingWTUtils.getSWTImageFromSwingIcon().
+Fixed NPE in UIDefaults.get*() when the property is not found.
+
+2008:
+
+28 Nov
+Fix for JSpinner change events and editing JSpinner contents
+
+28 Sep
+SWTSwing specific event dispatch handling
+
+24 Sep
+More efficient platform checking
+Popupmenu invisible event should fire on selection for combo
+
+17 Sep
+JScrollBar positioning needs to be done for Swing/Mac as well as Carbon/Mac
+
+2 Jun
+Added finalizer destructor for FontMetrics (thanks to Andre Kischkel)
+
+10 Apr
+Updated JFileChooser icons and made layout a little nicer (uses margins/spacing)
+
+03 Apr
+JList scrollTo broke if the peer wasn't created
+
+27 Mar
+JEditorPane won't load new editors over the top of a previous one 
+   (prevents listeners being abandoned silently)
+
+20 Mar
+Added JDateTime component to use SWT DateTime (in a swing-y way)
+Fixed JFileChooser to use JListTable
+
+16 Mar
+JList uses real list again. JListTable can be used for the more complex
+rendering. I think this fits in better with the platform ethic (and JListTable
+never worked very well on Windows, where the table couldn't autofit)
+
+13 Mar
+Subclassed CTabFolder to squash tooltips for JClosableTabbedPane - prevents
+   them appearing all over JInternalFrames when used as MDI container
+Fixed bug in JToolBar that caused two JButtonMappedActions to be created 
+   and left the original JButton disconnected
+
+12 Mar
+Fixed setCursor() for Window descendants
+Added newTabSelected() method for JDesktopPane (for subclasses)
+
+7 Mar
+Allowed override to use push buttons on toolbars
+
+21 Feb
+Added default file for native save JFileChooser
+
+17 Feb 2008
+Added margins to TableLayout
+Updated copyright year
+Upgrade to SWT 3.3.1
+Deprecated GCJ native build and Makefile
+Updated start scripts for new SWT (no lib path as extracted from JAR at run)
+
+3 Sep
+Removed drag event fired on MouseReleased
+Fixed bug in InputEvent.is<KEY>Down() methods to use the KEY_DOWN_MASK 
+bitmask tests.
+
+29 Aug
+Fixed bug in MouseEvent.getModifiersFromButtons to take into account 3
+keyboard modifiers (shift, ctrl, alt) during mouse events.
+
+==== 0.89
+
+21 Aug 2007
+Updated copyright year
+(Bob Tarling)
+Fix for consumed mouse events
+
+4 Oct 2006
+(Niklas Gustafsson)
+wrong import 
+
+4 Oct
+
+(Niklas Gustafsson)
+Missing new 1.4 code
+More compatibility/stubs
+
+3 Oct
+(Niklas Gustafsson)
+Many compatibility/stubs, missing classes, missing methods.
+
+13 Sep
+After Niklas work on matching some Swing 1.5 features, the build script
+   can now merge 1.4 and 1.5 sources to make a 1.4 or 1.5 build depending
+   on build options set.
+(Niklas Gustafsson)
+Many compatibility/stubs, missing classes, missing methods.
+New 1.5 target version of EventListenerList
+
+4 Sep
+Compiler target set to 1.4
+
+31 Aug
+(Niklas Gustafsson)
+Moved the menuListener from JSWTMenuComponent to JMenu, and changed/moved
+   some of the methods that is about this. Changed some of the conversion,
+   and fireing event from SWT to SwingWT. ( The is more todo )
+
+29 Aug
+Switched awt.Window.dispose to use peer.dispose instead of close - peer.close
+   under SWT 3.2 seems to trigger some check for the number of open Shells
+   and terminates the VM (not desirable if you want more than one Swing 
+   frame!)
+
+28 Aug
+(Niklas Gustafsson)
+JSWTMenuComponent -   removed some members that exists in parent component's.
+pEnabled/pMnemonics/actionCommand/menuAction/actionListener.
+
+16 Aug
+(Niklas Gustafsson)
+swingwtx.sound.AudioClipPlayer - A new class that implements AudioClip and 
+   is used by JApplet to play audioClip's.
+Applet - the methods getAudioClip / new AudioClip  now returns the new 
+   AudioClipPlayer as it's interface  AudioClip.
+JSWTMenuComponent - processMenuEvent is now calling  processItemEvent to 
+   generate itemEvent's.
+
+15 Aug
+(Niklas Gustafsson)
+JMenu - removed JMenu's components (list ) and is now using comps from 
+   Component.
+
+14 Aug
+(Niklas Gustafsson)
+JMenuBar / JPopupMenu. > They are using now >comps< to store components in.
+  I have removed   JMenuBar's  components (list )  and is using comps 
+  ( from Component ).
+JMenu - Added missing method getMenuComponent(int p)
+JOptionPane.showConfirmDialog() All variant implemented
+JTabbedPane  setModel() / getModel()  compatibility
+  
+9 Aug
+Fixed Eclipse .project/.classpath files for new layout
+Fixed Makefile for new src folder
+Fixed GTK2 SWT 3.2 source to build on Linux/GCJ
+Window show/hide fix - hiding no longer destroys the window
+Image/Text button fix for compatibility with SWT 3.2
+Stripped CVS log revisions (pointless now in SVN)
+Updated copyright year
+(Niklas Gustafsson)
+Many compatibility/stubs, MouseInputListener, print classes, plaf
+
+7 Aug
+Use of src subdirectory
+(Sean Flanigan)
+Additional stub methods Component/Container/GraphicsDevice
+
+17 Jul
+Update to SWT 3.2
+
+==== 0.88
+
+14 Jul
+Fixed default grey on table/list renderers
+Fixed bad JList column sizing for win32
+
+28 Mar
+Subversion migration under SF
+
+22 Mar
+JToolBar adds JButton references for mapped actions
+
+11 Mar 2006
+JTextComponent descendants fire KeyPress for mid-click (solves problems
+   with applications needing to pick up X clipboard pastes)
+(Scott Cytacki)
+AWTonSwingWT toolkit - SwingWT can be a full AWT toolkit, good enough
+   to run "real" Swing!
+Further implementation of Shape/Transform classes
+Further Java2D work
+swingwtx.swing.* fixes
+
+3 Aug
+(Silvio Moioli)
+JSlider fix for negative values
+SWTGraphics2DRenderer fix for getRenderingHints()
+
+5 Jul
+Component.get/setLocale
+Upgrade to SWT 3.1 final
+(Niklas Gustafsson) Fix to some bad logic in ActionMap
+AbstractButton.set/isRolloverEnabled
+Added implementation of TextAction.getFocusedComponent
+Fixes to custom.JSWTTable to work correctly with access to
+    DefaultListSelectionModel
+SwingWTUtils.getFocusedComponent() to return a reference to the
+    currently focused SwingWT component.
+
+21 Jun
+(Niklas Stopp) Additional Clipboard constructor
+
+==== 0.87
+
+2 Jun
+
+Cleared up GCJ compilation problems for SWT 3.1M5a on Linux/GTK2
+
+22 Apr
+
+Added additional LSB mountpoints to JFileChooser
+Fixed bug where JFileChooser would skip a file for every hidden
+   file in a UNIX directory
+JFileChooser now sorts directories above files
+
+20 Apr
+Combo.setItems crashes under GTK2 in 3.1M5a so had to revert
+   to Combo.add instead (which was previously too slow but seems
+   to be fixed now)
+Upgraded to SWT 3.1M5a for PNG alpha fixes
+
+19 Apr
+(David Green) DefaultTreeCellEditor implementation
+
+5 Apr
+Failed workaround for MacOSX combo box indent bug (why does nobody
+   else using SWT/Carbon see this?)
+
+4 Apr
+More MacOSX bugs fixed for sizing vertical toolbars and JList
+
+30 Mar
+MacOSX sizing bugs in text fields and vertical scrollbars fixed
+JComboBox.setMaximumRowCount() now works correctly, mapped to 
+  SWT setVisibleItemCount()
+
+23 Mar
+Fixes to AWTSwingWrapper that prevented AWT components having working
+   events and most of them being added to forms (eek!)
+
+22 Mar
+(Mathew McBride) Component.isOpaque()
+
+18 Mar
+Fixed GTK bug that causes concurrent modification of Action/MouseEvents.
+
+17 Mar
+Bug fixed in JTable.getCellSelectionEnabled() (wrong signature)
+
+10 Mar
+Fix to platform browser widget error message instructions for Linux/GTK2
+
+9 Mar
+(David Green) Many minor compatibility fixes and improvements
+
+8 Mar
+(Mathew McBride) Font.deriveFont implementations
+
+25 Feb
+Component.size(), AbstractButton.getLabel() and JTable.editCellAt(int,int)
+
+23 Feb
+Added UIDefaults.keys()
+
+22 Feb
+JTabbedPane now supports add methods with indexes
+Fixed ConcurrentModificationExceptions thrown from cached
+    JMenuBar/JPopupMenu code
+Fixed few strange compilation errors suddenly appeared
+
+15 Feb
+JFileChooser.showDialog support
+JOptionPane instance support (no dialog creation at present)
+JSplitPane.getDividerLocation()
+PixelGrabber.grabPixels(ms) throws InterruptedException
+swingwtx.swing.MenuElement implemented, with JMenu* implementors
+JPopupMenu.getSubElements(), JMenuBar.getSubElements(),
+JMenu.getSubElements()
+
+24 Jan
+Font family support added (getFontName()/getFamily()/getName())
+Proper implementation of GraphicsEnvironment, including screen point
+    references and getAllFonts()/getAvailableFontFamilyNames()
+SwingWTUtils outputs SWT version information
+SwingWTBootStrap passes on any extra arguments to the called 
+    application.
+
+==== 0.86.1
+
+20 Jan
+JSWTTable has a dependency on JFace - this is not included for
+    native builds now (there's always something!).
+
+==== 0.86
+
+20 Jan
+(Andreas Kiebach)
+Alternative custom.JSWTTable implementation which uses the
+   JFace APIs instead of the "raw" SWT ones.
+Overridable hook to awt.Dialog to allow subclasses to
+   use initDialog to run code immediately after the Dialog
+   becomes viewable.
+
+13 Jan
+Upgraded to SWT 3.1 milestone build. The speed increase to GTK2 
+   applications is RIDICULOUS. SwingSet2 demo now runs at about
+   10x the speed (or it feels like it) that it did with 3.0
+   It also uses the new GNOME 2.8 file dialogs (which is nice), has
+   some KDE3 integration I haven't investigated yet and a native
+   Spinner control which we could utilise.
+
+11 Jan
+(Silvio Moioli)
+drawPolyLine(), fillPolygon() and drawPolygon() implementation for 
+   SWT2DGraphicsRenderer class.
+
+4 Jan
+(David Barron)
+Many compatibility fixes, particularly around JTree/JTable
+
+[ Merry Christmas and a Happy New Year! ]
+
+11 Nov
+Image now retrieves SWT display directly to allow applications to use 
+   SwingWT's image handling routines without a display (stops image
+   manipulation hanging on UNIX from Cron jobs or with no DISPLAY
+   environment)
+
+10 Nov
+JTextPane uses DocumentEvents to trigger updates now. Still need something
+   less hacky for holding and applying styles, but this is much better.
+   EditorKits are now supported in limited capacity
+Fix to JTextPane caret with keystrokes (doesn't keep shooting back to
+   the start). Also added CAPS_LOCK as a control key
+
+9 Nov
+Formatting/style support for JTextPane/JEditorPane!
+New StyledTextDemo to show off JTextPane support - won't be long before
+    we can run NetBeans!
+
+8 Nov
+Fix to JTree to allow creation without a model
+Bounds checking on Container.getComponent(index)
+
+4 Nov
+New getPixmap() call to look for images on the filesystem or as a
+    classpath resource depending on if your application is native or not.
+(Shaun Jackman)
+All system calls use a getPixmap variant that uses the class as context
+    to look for relative resources (fixes a GCJ problem with compiled-in
+    resources). Also allows dynamic switching to file-system images.
+
+==== 0.85
+
+2 Nov
+Fixed default JTextField/JTextArea sizes
+Fixed bug in MacOSX start script for runswingdemo
+Scrollpane support in TextEditorPane implementation
+JComboBox correctly creates DefaultComboBox models
+Working getListeners() in all Component descendants
+(Fernando Petrola) 
+JComponent.getTopLevelAncestor implementation
+Bugfix to JComponent client properties methods
+Support for string layout modifiers
+UIManager.getColor(key) missing
+TreeSelectionListener was not extending EventListener
+
+1 Nov
+FINALLY found a way to reproduce the not-repainting/shrinking window bug
+   and squashed it.
+Fixed bug that caused the drives box in non-native JFileChooser to not
+   change directory.
+
+30 Oct
+Code cleanup
+Further work on using JEditorPane as a proper editor
+
+29 Oct
+Cleaned up code surrounding JEditorPane - it is now a thin wrapper around
+   an EditorPane interface, of which there are now 3 implementations, one
+   for the platform browser, one for editable content and a fake browser.
+   Reflection is used to create them, so you can just remove the 
+   swingwtx.swing.editorpanes.PlatformBrowserEditorPane class from the
+   build if you want to remove SwingWT's dependency on Mozilla (that's one for
+   the Debian maintainer ;)
+   It does make it a damn site easier to understand and build on the 
+   editorpane stuff as well.
+
+19 Oct
+Fixed native makefile
+Patched SWT source for MacOSX and Win32
+Fixed binary switches for SWT in CVS
+Start of StyledDocument support for JEditorPane
+
+8 Oct
+Definitely nailled the resizing shell bug under GTK2
+Fixed sizing bug when using accessories with JFileChooser
+Trapped fault using null with initialSelectionValue in a JOptionPane
+
+7 Oct
+Fixed bug that occasionally caused Windows to open with a 1x1
+   size under GTK2.
+Upgraded to latest SWT 3063 build
+Fixed bug in JOptionPane.showInputDialog that prevented
+   initialSelectionValue appearing for text input
+
+30 Sep
+(Dan Naab) Hack to allow button foreground colour under Win32
+(Dan Naab) Fixes to JPopup menu events
+
+24 Sep
+MacOSX specific improvements to not use the vile-looking
+   platform toolbuttons, and to ensure Window descendants
+   appear below the menubar.
+(David Jung) Printing Interface/MouseWheel stubs
+
+
+7 Sep
+JScrollPane fixes to Dan's Viewport work
+Additional compatibility add methods for JMenuBar
+JTable cell rendering fixes - DefaultCellRenderer clears itself
+   prior to use to prevent images being rendered across all 
+   columns when using the default renderer
+
+6 Sep
+(Fernando Petrola) Classloader to dynamically switch Swing for
+    SwingWT on the fly.
+(Petr Slaby) JTree support for Object descendants (instead of just 
+    DefaultMutableTreeNode)
+
+4 Aug
+(Dan Naab) InputEvent/JTable improvements
+
+17 Jul
+(Dan Naab) JTable rendering work to allow AWT Graphics rendering and
+    JCheckBox rendering support
+
+==== 0.84
+
+24 Jun
+Identified and fixed problems causing SwingSet to fail on MacOSX
+
+23 Jun
+MacOSX build script with GCJ and ifdef DARWIN
+Event pump fixes for the broken thread model in MacOSX java.
+   Need to call intialiseMacOSX(Runnable) from your main()
+   method to work around this. Anything else would have reduced
+   functionality for Mac users so don't bitch at me.
+Additional MacOSX fix to detect when Quit is selected from the
+   application menu.
+
+22 Jun
+SpinnerNumberModel returns last value instead of null when going
+   outside model bounds
+MacOS X scripts use the special "java_swt" hack to start up now.
+
+18 Jun
+Fix to JFileChooser to display the current location, and so
+   JFileChooser(File/String) constructor works again
+
+15 Jun
+AbstractButton defaults button text for ActionCommand like Swing
+
+11 Jun
+Fix to KeyEvent to read Event.getID() instead of it's own
+   private eventID var
+Fix to Component.setEnabled()/setVisible() that meant the
+   peer had to be realised to work
+Fix to default sizings when dealing with container classes
+   that don't have layouts (JTabbedPane, etc.) and for
+   null layouts.
+
+10 Jun
+(Dan Naab) Fix to selection for read-only tables
+JTable cursors only used when cell selection is enabled
+   and with editable data (fixes broken rules)
+Upgrade to SWT 3.0RC1 now
+MacOS X Carbon libraries now included
+MacOS X startup files for demos (untested until my Mac arrives)
+Native build Makefile updated to work with Cygwin under Win32
+
+9 Jun
+(Dan Naab) AWTSwingWrapper class to allow flexibility of 
+   reusing Swing code for AWT components, but allow the
+   correct AWT hierarchy.
+
+8 Jun
+awt.Container.getComponentCount() is thread safe
+(Dan Naab) ComponentPeer support and change to getSWTPeer()
+
+7 Jun
+(Daniel Spiewak) JToolBar rollover support and JProgressBar
+    orientation/indeterminate support
+SwingWTUtils.setUseSWTFastVirtualTables() call to turn 
+   off the use of virtual tables (still buggy under
+   Win32 in M8 so off by default for Win32 now)
+Fix to awt.Window to correctly fire WINDOW_OPENED events
+JTable enables full row selection if there aren't any
+   editable columns by default now
+
+4 Jun
+Fix to Component.SWTEventAdapter.Key events to use
+   the KeyEvent.translateSWTKey/Modifier() calls
+New computePreferredSize() framework to allow any
+   Component descendant to calculate it's size (base
+   method in Component uses peer.computeSize())
+JTextArea calculates a better preferred size to match
+   Swing
+Fix to positioning of Window descendants so they appear
+   in the correct place again.
+
+27 May
+Alternative MouseEvent.translateSWTButton() to use
+   bitwise operators.
+
+26 May
+(Dan Naab) Window descendants are created when made
+   visible as with other SwingWT components. This allows
+   for proper window decorations, non-resizable, etc.
+
+24 May
+(Rhyd O'Keeffe) Use of native DirectoryDialog for 
+   JFileChooser.DIRECTORIES_ONLY
+
+12 May
+New test cases
+Test cases implemented as Mauve in style with bridge
+   classes to allow us to easily convert and submit
+   tests to the mauve project. Runtime remains as
+   JUnit (and build script fixed to fork VM when
+   running tests to prevent Ant hanging)
+
+11 May
+JUnit test framework for SwingWT specific tests
+   and incorporation into the build process
+Fixes to container to set the parent hierarchy even for
+   non-realised components.
+JDesktopPane.setSelectedFrame() support
+
+10 May
+JComponent event chain to make JInternalFrames active
+   when a child receives the focus or is clicked
+Start of proper MDI support through JDesktopPane/JInternalFrame
+   with compatibility JDesktopPane.setTabbedEmulation(true)
+   method to use old-style tabs
+Fix to enable platform borders on JPanel
+Fixed container bug that caused null pointer errors when
+   removing components from containers with no layout manager
+(Clemens Eisserer) Real JLayeredPane implementation
+ImageIO.read() support
+awt.MediaTracker support
+
+==== 0.83
+
+7 May
+(Dan Naab) Start of Mauve test integration
+Layout fixes to make sure SwingWT behaves just like
+   Swing with null layouts
+Component/Container/JComponent fixes so size/locations
+   are handled correctly
+
+6 May
+JDesktopPane fixes to cope with overloading Component
+   based add() methods.
+All constants now match Swing counterparts for binary
+   compatibility with inlined constants on existing
+   AWT/Swing applications.
+
+5 May
+Fix to call JComponent.paintComponent() correctly
+JComboBox fix to call setSelectedItem() appropriately
+   on the model as the user changes things
+JTree now sends expanded flag correctly to renderers
+   (and calls renderers on expand/collapse correctly)
+awt.Window toFront()/toBack() implementation
+(Laurent Martelli)
+JComboBox fix for huge performance improvement
+   with large datasets
+Binary compatibility for container.add() methods
+BoxLayout fixes
+Additional awt.Font methods/constructors
+Additional awt.Component/Container methods
+Additional awt.Toolkit methods
+Additional swing.JComponent methods
+JInternalFrame fixes for PropertyVetoException
+JTable/JTree stubs and additional methods
+JMenu.getPopupMenu() support
+Various small bugfixes
+Stub ToolTipManager implementation
+Additional awt.dnd framework
+
+4 May
+Fix to getBounds() for Window descendants
+(Laurent Martelli) DefaultMultableTreeNode.getPath(),
+   DefaultTreeModel EventListener fixes
+ImageIcon byte[] constructors and fixes to 
+   Toolkit.createImage(byte[])
+Fix to SwingWTUtils.removeHTML() to prevent strings
+   containing "<" and "<<" etc. being identified as
+   HTML and broken
+Fix to prevent swingwtx.swing.Timer throwing exceptions
+PlainDocument/View support and implementation
+Correction of text component hierarchy
+Fixed lost JTextField in demo
+
+3 May
+(Dan Naab) Build script can now build SwingWT with 
+   java.awt/javax.swing
+   package names instead for free VMs (build with
+   "ant -Dsun=no" )
+
+30 Apr
+GridBagLayout interactions with Container fixed
+Moved log to end of Component/SwingWTUtils (two most
+   changed files in the app)
+Stubbed TreeSelectionModel support
+Basic JViewport support
+Missing JTree selectionPath methods added
+Missing JTabbedPane indexOfComponent/Tab getComponentAt 
+   methods 
+Missing overloaded JMenu.add() methods
+Support for MenuListener/MenuEvent
+Fix to Window descendants to forward event listeners
+   to the content pane.
+New routines to calculate preferred size of non-realised
+   SWT peers.
+Fixed bug in SwingWTUtils.renderStringHeight() that actually
+   returned the width.
+Fixed bug in mouseDrag/mouseMoved calls (backward logic)
+Hack to implement correct mouseDrag event behaviour
+
+29 Apr
+Missing JOptionPane constants added
+JComponent stub compatibility methods
+Additional JTree methods implemented
+ImageConsumer/Producer support and Toolkit.createImage()
+
+28 Apr
+PlainDocument, StringContent and GapContent implementations
+Further fixes to component hierarchy (JInternalFrame, custom 
+   controls, etc.)
+Improvements to component dispose() chain
+Start of javadoc work
+Cleanup of size related calls in awt.Component
+
+27 Apr
+build script runs Makefile now
+Fixed broken reference to JTable.AUTO_RESIZE_OFF in JTableHeader
+Fix to Makefile to support older GCJ (any 3.0 series)
+Start of working AbstractDocument support
+Fix to component hierarchy so JComponent descends awt.Container 
+   for correct Swing compatibility
+
+25 Apr
+Fix to Swing border painting code to not attempt to paint
+   empty borders around all components - waste of many objects
+   and breaks SWT mouse events (now creates empty borders on
+   demand for getBorder() call and only draws borders if
+   explicitly set).
+
+23 Apr
+(Dan Naab) Swing-style border-painting support
+Missing showConfirm() signature for JOptionPane
+Additional MouseEvent BUTTON constants
+JSlider.createStandardLabels() support
+FontMetrics thread safety
+Component.getFontMetrics() and Toolkit.getFontMetrics() support
+MouseMotionAdapter added
+Proper *nix Makefile
+
+==== 0.82
+
+21 Apr
+Fix to JOptionPane.showInputDialog() size when in text entry mode
+Native Linux build script fully working!
+Cleaned up a lot of source code
+
+20 Apr
+awt.MenuShortcut implemented
+Double-buffered component graphics contexts by default
+SWTGraphics2DRenderer supports all variants of drawImage() correctly
+Native Linux build script/patched SWT source inclusion
+Split build into two jars - one for core SwingWT and one for demos
+    for neatness.
+
+19 Apr
+(James Moger) Additional KeyEvent constants
+Missing Dialog/JDialog constructors implemented
+Component.transferFocus(), Component.transferFocusBackward() support
+JComponent.setNextFocusableComponent() stub
+Window.isActive() support
+Win32 Fix for HTML demo not appearing
+Win32 Fix for table editors
+Frame repaint bug under GTK2 fixed
+custom.JTaskTrayItem implementation for system task tray/notification
+Fix to JList relayout bug when new the data updates
+Fix to JTable DefaultEditor with combo and fires cell renderers
+   correctly with table editors
+Fix to JTree to use cell renderer from editor update
+
+18 Apr
+Dialog repaint bug under GTK2 fixed
+JTable now uses the new VIRTUAL tables in 3.0M8 to dynamically map
+    items from the table model as needed - JTable is now as fast
+    as real Swing!
+Use of new CTabFolder with platform LAF again
+Upgrade to 3.0M8
+JSpinner implemented
+Fix to JPopupMenu to recreate menu peer if the attached parent is
+   disposed (fixes bug attaching popups to JTable)
+
+16 Apr
+(Dan Naab) InputMap support
+Fix for when to use TableCursors (only if there's some rows
+   and at least one of the columns is editable).
+Table and Tree cell editing support!
+
+15 Apr
+awt.EventQueue implemented
+Fix so SwingSet2 source appears correctly on GTK2
+JTree default folder/doc images to match Swing
+Component correctly caches size/location calls so components don't need
+   to be moved after frame display
+JTable fixes and improvements
+(Dan Naab) ComponentUI, UIDefaults/UIManager and Accessibility support.
+(Antonio Weber) TableColumnModelListener implementation and support
+
+7 Apr
+Whoops - forgot to enable SWT MULTI/SINGLE selection based on new
+   ListSelectionModel :-)
+
+6 Apr
+JButton bug fix to prevent text appearing left aligned
+Various fixes have meant that the remaining 2 small parts of
+   SwingSet2 have worked for a while. ButtonDemo and the
+   complete ListDemo now work correctly.
+ListSelectionModel support for JTable and JList (at last!)
+JTable.xShowGrid() support
+JTable - some methods missing thread safety
+JSplitPane addLeft/addRight were previously not thread-safe
+(James Moger) JButton now supports other peer fonts when using
+   renderText() with images
+(Antonio Weber) JFilechooser fix to getSelectedFile() and use
+   of FileFilter.
+
+31 Mar
+(Dan Naab) Component.hasFocus() method
+
+==== 0.81
+
+31 Mar
+Fixed custom JFileChooser dialog trim bug
+HTML stripper compresses whitespace so text output is much cleaner
+awt.Component MouseMotionListener implemented
+Fixed JTable disappearing bug in SwingSet
+
+30 Mar
+Start scripts for Kaffe/Linux - Kaffe is fully supported with SwingWT 0.81!
+Fix to JPanel insets means JPanels with a TitledBorder now size their
+    inner client area correctly.
+awt.Component.minimum/maximumSize() methods now work correctly (fixes
+    problems with components not expanding in BoxLayout)
+awt.event.ComponentAdapter added
+Bug fixes to JScrollPane (JTextArea fix) and DefaultTableModel (listeners)
+Proper swing.Icon interface support throughout (finally!)
+(Thanks to Dan Naab): AWT/Swing event improvements/bug fixes and InputMethodEvent
+
+26 Mar
+Fixes to JSplitPane to support setDividerLocation() and for thread safety
+Bug in DefaultTreeModel fixed where events weren't firing down to the JTree
+awt.SystemColor now fully works and returns real system colours.
+
+23 Mar
+SwingWTUtils.setEclipsePlugin(bool) - call this first if your application is 
+   an Eclipse plugin and it will bind SwingWT to an existing SWT event dispatch
+   thread (in this case Eclipse's) and prevent threading errors.
+
+22 Mar
+awt.SystemColor implementation
+Implementation of awt.FileDialog
+JOptionPane.showOptionDialog implementation
+Completed Applet stub implementation
+JRootPane incorporated into JWindow, JDialog, JFrame and JInternalFrame correctly
+FillLayout layout manager (basically BorderLayout.CENTER but more efficient)
+JRootPane and JLayeredPane implementation
+
+21 Mar
+awt.Label now supports text and alignment constructor
+Graphics subclasses correctly set the fill colour for fill methods
+awt.List supports missing methods and constructors now
+Dummy Applet and JApplet classes
+
+19 Mar
+JFileChooser now has drive boxes so Win32 users can see network shares,
+   CDROMs, etc.
+
+18 Mar
+Fix to JFileChooser for implementation bug in GNU Classpath
+JTextComponent and Caret implementation. JTextArea, JTextField and JEditorPane
+   now descend JTextComponent corrrectly
+Fixed interface to prevent deprecation warnings from JClosableTabbedPane
+   and to keep MDI apps consistent
+Fixed JFrame, Frame, JDialog, Dialog, JWindow, Window hierarchy to 
+   correctly match Swing
+
+16 Mar
+win32 batch files incorrectly referenced swt-pi.jar
+Code tweaks to allow compilation under JDK1.3
+
+12 Mar
+AWT Scrollbar class incorrectly named
+AWT CheckboxGroup support (thanks to Ryan)
+Removed debug messages from custom JFileChooser
+Fixed threading issue in AbstractButton/JFileChooser
+Stopped memory leaks on destruction/removal of containers
+
+4 Mar
+JInternalFrame properties update their peers correctly after creation
+
+==== 0.80
+
+3 Mar
+JList threading fixed
+Generic error handlers around event dispatchers. This prevents your app
+   dying unnecessarily in random circumstances.
+
+2 Mar
+JTable defaults to grid lines (as Swing does)
+Event adapters are now far less resource intensive on anonymous inner
+    classes (using one big class). Also ensures you can never get multiple
+    SWT->SwingWT event adapters registered for any one component.
+
+1 Mar
+SwingWTUtils removeHTML converts some HTML tags to chars (&amp; &nbsp; etc.)
+SwingSet JFileChooser demo now works fully
+awt.Window.setLocationRelativeTo(Component) support
+awt.Image now supports aspect ratios (negative numbers) for getScaledInstance()
+JLabel supports the "null" image
+ImageIcon protection to return 0 height/width if no image loaded
+Component isShowing()
+JComponent now supports Property Change Events
+"Real" JFileChooser support with Swing-style accessories/file filters. Native
+    dialogs are still available by not calling setAccessory()/*FileFilter().
+
+27 Feb
+JTable uses synchronous painting (prevents problems with JInternalFrame)
+JTable no longer paints twice (due to queued async thread from DefaultTableModel
+   in constructor).
+JScrollPane doesn't do a lot of the complicated setting up if you use
+   a component that can handle it's own scrollbars.
+
+26 Feb
+SWTGraphics2DRenderer now allows access to the underlying SWT GC
+
+24 Feb
+JInternalFrame supports contentPane correctly
+Window/Frame/Dialog contentPane now uses awt.Container for interfaces
+Compatibility methods for Component/JComponent/JTable
+Better error message when Mozilla not found (explains how to set it up)
+JEditorPane now fires HyperlinkEvent.ENTERED correctly using SWT StatusTextListener
+
+23 Feb
+Fixed JScrollPane bug that caused Table/Tree/TextAreas to size incorrectly
+   for layout managers.
+showSelection() (non-swing) routines for JTable/JList
+Fixed tabbing bugs in JTextArea
+Abstracted different event registers so they can be easily overridden
+JLookupPopup correctly sets focus to the popup after appearing
+JTree/JTable now support fonts from cell renderers
+
+22 Feb
+Using JScrollPane H/VScrollBarPolicy AS NEEDED wasn't showing the scrollbar
+   at all for TextAreas.
+
+20 Feb
+Fixed use of StringBuffer.indexOf in JEditorPane for GCJ/GIJ
+JLookupPopup - a new, fast optional replacement for JComboBoxes with lots of data
+
+19 Feb
+Fixed newly introduced bug in JTable that prevented rendering
+setText() for all components can now accept null as Swing does
+JMenuBar descends JComponent correctly now
+Stubbed swingwtx.swing.AccessibleContext (also for GCJ/GIJ compatibility)
+JTextArea uses the much lighter weight (and GCJ/GIJ compatible) Text peer widget again
+Version output on startup (unless turned off with SwingWTUtils.setShowSwingWTInfoOnStartup() )
+
+13 Feb
+JTable no longer uses incorrect asynchronous drawing 
+JComboBox and AbstractButton fixes for non-peer selection
+JTable uses dirty flags to track model state. This prevents tables being painted twice
+   when using setModel() call after it has been added to a container
+
+==== 0.79
+
+12 Feb
+No longer throws an ugly runtime error if no Mozilla is available on Linux
+JTree expandPath() and collapsePath() supported
+JList now supports locationToIndex() and selection colours
+JEditorPane Document support for programmatic modification (thanks to Marco Hennings)
+
+7 Feb
+Typo correct in swingwtx.swing.Box - createVer(t)ical
+
+3 Feb
+JList now stops painting whilst adding listdata to default model
+Threading bug fixed in SwingUtilities.invokeIn
+Fixed bug in hotkeys for JComboBox
+Optimised how laying out of containers is handled - should be much quicker
+   for containers with many children
+Corner/Row/Column support for JScrollPane
+Bug fixes to JScrollPane implementation
+reinstatement of JScrollPane demo in SwingSet2
+
+2 Feb
+setContentPane() support for JWindow descendants.
+Non-modal dialogs now work correctly
+Window pack() now uses the layout manager of it's content pane to determine the
+    optimum size (instead of the SWT Shell.pack() which doesn't work since we
+    aren't using SWT layout managers)
+Proper JScrollPane implementation, built from scratch
+Fixed broken JScrollBar orientation
+Fix to broken constructors in swingwtx.swing.table.TableColumn
+
+30 Jan
+Fixes to JDesktopPane, JClosableTabbedPane and JInternalFrame to keep offline/viewed
+    frames in sync. Each frame was being added twice to the JDesktopPane previously.
+
+==== 0.78.1
+
+30 Jan
+Fixed critical bug in Container addition that caused JInternalFrame containers to not layout their
+    components in some situtations.
+
+==== 0.78
+
+27 Jan
+Win32 compatibility fixes
+SwingSet demo fixes (Button/ScrollPane dropped temporarily)
+Fixed evil containment bug that would cause hangs when removing/adding the same components
+Proper JScrollBar component implementation
+Document classes added and start of proper JEditorPane support
+ListSelectionListener/Events implemented
+ListModels implemented and working
+Scrollables now change sizes correctly for layout purposes
+
+26 Jan
+ContainerListener/Event and ComponentListener/Event support
+BorderFactory added
+Many missing AWT methods added
+Correct JPanel titled border support! Includes font/color support too
+Fix to colour handling for JTable
+HTML handling for Labels and dialogs (throws it away - SWT can't do anything with it)
+JTabbedPane supports overloaded add() methods correctly
+Fix to component paintImmediately and paintChildren
+Fix to TabbedPane cache
+Fixed broken destructor in Graphics2D
+JComboBox now fires ActionEvents correctly
+JComboBox fires ItemEvent/ActionEvent from programmatic changes like Swing now
+   (not just user interaction)
+
+24 Jan
+DefaultTableCellRenderer supports images now
+Fully working BoxLayout and Box as container
+
+23 Jan
+SwingSet demo included (not finished)
+JTabbedPane tooltip support
+Fixed broken JPopupMenu constructors
+Missing JButton constructors implemented
+Component compatibility methods
+AccessibleContext support for JComponent
+Additional Color constructor/methods
+swingwtx/swing/plaf and Metal implemented enough to subclass
+Font now supports deriveFont() and styles correctly
+Basic implementation of swing/text and swing/colorchooser packages
+DocumentListener/DocumentEvent UndoableEditListener/Event classes.
+Fix to JOptionPane showMessageDialog to make the Ok button work on MacOSX
+
+22 Jan
+JComboBox now cycles through contents like Swing when first matching
+    key is hit
+SwingUtilities.invokeIn() has never worked properly
+Window reference counting to make sure the dispatch thread is stopped
+Better action support (thanks to Brian)
+
+20 Jan
+Additional awt.dnd work (Tomer)
+JOptionPane now supports null parent containers (as real Swing does) through the
+    use of an invisible shared frame.
+JDialog supports modal flag correctly (instead of making all JDialogs modal)
+SwingConstants TRAILING/LEADING now map to RIGHT/LEFT for correct alignment behaviour
+Menu class compatibility and thread safety
+Menu items now descend AbstractButton/Component and override appropriate behaviour as
+   Swing does.
+Correct JMenuItem + descendant constructors (including Action constructors)
+JMenu overloaded add() methods, including add(Action)
+
+[ Thanks to a mysterious stranger for the following -->]
+JOptionPane rootFrame support
+JComponent get/putClientProperties support
+Fixed broken Insets constructor
+Color getRGB() support
+swingwtx.swing.Box implementation
+
+19 Jan
+JClosableTabbedPane and JTabbedPane now support disabled tabs
+Fixed bug in TabbedPane components cache 
+Correct actionCommand handling
+Intelligent Autosize code for JTextField/JTextArea (and AWT counterparts)
+Many AWT compatibility methods/constructors
+Moved ValidatableComponent, ValidatableJComboBox, ValidatableJTextField, ValidationGroup
+   blankicon.gif and erroricon.gif to swingwtx.custom.validation
+Moved JClosableTabbedPane and JCoolBar to swingwtx.custom
+Fixed getWidth()/getHeight() call that caused layout to fail on opening a new Frame
+Fixed bug in JButton image/text together rendering
+MacOSX users need call to peer.layout() after peer.open() in Window to see components
+Threading improvement to invokeSync() - if we are already on the dispatch thread, we
+   just jump straight into the code on the current thread.
+Fixed blank text problem on JRadioButton/JCheckBox again
+
+16 Jan
+Many compatibility methods added to Container, Component, JInternalFrame,
+   UIManager, SwingUtilities, JTabbedPane, JPasswordField, JCheckBox
+   and JRadioButton.
+JProgressBar should be smooth, rather than stepped
+JComboBox ItemEvent/Listener support
+Real Swing event dispatching! No more threading errors or problems. show()
+   no longer blocks on first call, and threading behaviour is now identical
+   to Swing. This is the last barrier to full Swing compatibility and being
+   able to use SwingWT as a drop in replacement for 3rd party apps!
+
+15 Jan
+TreeWillExpandListener support (thanks Sachin)
+Correct AWT Graphics/Graphics2D abstraction implemented with a new
+   class to handle things correctly - SWTGraphics2DRenderer
+   Good chunk of Java2D done
+AWT Components now support correct constructors and should be fully
+   compatible with "real" AWT.
+Fixed multiple display threading problem (thanks to Sachin)
+AWT Component/Container/JComponent hierarchy fixed
+All components now have drawable surfaces that can be painted on (just like
+   Swing)
+
+13 Jan
+ValidationGroup and ValidatableComponent implementations with demo. This is a 
+   new addition which is not part of Swing. It is actually a part of C# but a 
+   SwingWT user
+   asked if it could be done and since I liked the idea, it's in. Have a look
+   at demo.ValidationTest for an example of usage (it isn't much like the C# 
+   one - it's much more Swing-y in implementation).
+JSlider implementation
+Added JSlider to demo
+
+12 Jan
+JTable can respond and update specific rows from TableModelEvent now -
+    much more performant if you are just changing values in your model.
+
+==== 0.77
+
+10 Jan
+JTree/TreePath fixes by Sachin (broken path, rootVisible support) and Rob
+  (Missing root node from path, couldn't represent TreePath as string)
+
+9 Jan
+JToolBar now maps JButton components added for you to make them look
+   excellent. All transparent to the developer. Action mapping is now
+   performed so the JButton returned can alter the component generated
+   by the action.
+JToolBar now uses real platform ToolBar/ToolItem if you are using Swing
+   Actions to create them, otherwise it will credibly mix and match with
+   SwingWT components. Embed JToolBar in a JCoolBar for max fun :)
+
+8 Jan
+JTable is multi select. Odd looks under Win32 fixed with FULLSELECTION
+Fixed vanishing radio/checkbox buttons for good!
+Tab key traversal now works from JTextArea
+JTextArea now has CTRL+A shortcut key like Swing
+TableLayout now allows top to bottom newspaper column style layout
+
+7 Jan
+Fix class cast exception for items calling Container.getComponents(),
+   which prevented GridBagLayout working
+Renderwidths now work perfectly
+Windows calculation fix to render widths
+
+6 Jan
+Fixed horrible button borders under Win32
+SwingWTUtils.getRenderStringWidth, now used by JTable/JList for auto-sizing
+   themselves.
+Cleaned up layout code further
+JToolBar uses TableLayout for vertical orientation
+Dispatch thread retardation in SwingWTUtils for those wanting performance
+   intensive operations.
+
+5 Jan
+(Daniel Spiewak) JToolBarNative implementation and LayoutManager
+  implementation/passthrough so "real" AWT/Swing layout managers can
+  now be used. GridBag now fully works
+(Bob) Fixes to implement getPreferredSize() correctly for new layouts
+JToolBar now supports Action
+JTable fixes for new layout code
+
+4 Jan
+JComboBox sets default value correctly when editable
+JComboBox popupMenu events fire correctly now
+JList can handle null selected item
+
+2 Jan
+JTabbedPane supports change events
+Frame extended state now works correctly for programatically changing
+    window states
+JButton/JToggleButton now display their tooltip mnemonics
+Mnemonics can now be applied to buttons without text (like real swing)
+Text renderering doesn't apply to just mnemonic button texts
+No longer uses String.replaceAll() as it is incompatible with GNU Classpath
+
+28 Dec
+Changed JList to use Table/TableItem as a base. JList can now support
+    cell renderers like JTable/JTree
+
+[Christmas]
+
+22 Dec
+Fixed up AWT DnD to build temporarily (doesn't work yet)
+Fixed mouse click events on table
+Added JToggleButton
+Added swingwtx.swing.Timer support
+Fixed broken ItemEvents in AbstractButton
+On the fly JPanel heights
+JInternalFrame multiple dispose calling problem fixed
+Fixed JList breaking with null data
+getScaledInstance() support for AWT image
+Utility methods in SwingWTUtils for saving images to streams, encoding
+    as PNG, GIF and JPEG
+JButton can now support text and images together! You even get correct
+   alpha transparency on PNGs (unlike the rest of SWT)
+
+==== 0.76
+
+18 Dec
+JClosableTabbedPane and JTabbedPane can now support disabled tabs
+Thread safety for Tabbed components
+
+17 Dec
+JButtons added to toolbars appear flat
+JPanels in JScrollPanes can now scroll as they do in Swing
+JTextArea now line breaks correctly
+JTable events now reset on changing columns (previously got lost)
+JTableHeader mouse events now implemented
+Completed implementation of TableColumn
+Workaround for getColumnIndexAtX member of TableColumn to get clicked col
+GridBag now supports excess space and correct grid sizing. Need to add components in grid order though
+JOptionPane showInputDialog() support
+JDialogs can now block until disposed/hidden
+JList now supports setSelectedValue(Object, boolean)
+Cached font support to components
+Fix to FlowLayout for bad painting of Radio/Checkbox
+Vertical orientation support for JToolBar
+Mnemonics are no longer case sensitive
+JCoolBar component (nice and easy to use with JToolBar to give you that bit extra!)
+Better auto-table sizing if no column widths are set in TableColumnModel
+
+16 Dec
+KeyEvent consumption
+Flow layout alignment
+JLabels now show images correctly
+JComboBox auto selection/editable handling more like Swing
+JTable automatically redraws columns correctly when models change
+Fixed focusTraversal for FocusManager
+JInternalFrame close correctly now (and dispose of themselves)
+Components correctly test for widget disposal as well as null through SwingWTUtils.isSWTControlAvailable
+AWT behaviour for ActionEvent
+Fixed hang when a Window close method closes it again
+Thread safety added to common methods to prevent SWT Thread access exceptions
+JPanel border support
+Mnemonics and accelerators no longer care about the order you add them
+Menu removeAll() now works
+JComboBox defaults to empty list for parameterless constructor
+JScrollPane defaults to AS_NEEDED for policies
+
+15 Dec
+JLabel alignment 
+JButton defaultCapable, alignment 
+JInternalFrame getRootPane, get/setSize(), setDefaultButton, setLocation, is/setSelected 
+JComboBox get/setMaximumRowCount(), ComboBoxModel support
+JComponent setRequestFocusEnabled, get/setAutoScrolls
+JTextArea get/setWrapStyleWord, getLineWrap, is/setEditable
+Window processWindowEvent(WindowEvent), getSize, setSize(Dimension)
+JWindow getRootPane, setDefaultButton
+JFrame get/setResizable, get/setExtendedState
+JProgressBar get/setStringPainted, get/setString
+AWTEvent consumption 
+JScrollPane get/setHorizontal/Vertical/ScrollBarPolicy, get/setViewportBorder
+awt.Window watches events to determine whether Windows are iconified/closed
+FlowLayout alignment stubs
+JEditorPane setPage(String) setContentType
+JDialog setResizable, setModal
+JRadioButtonMenuItem setSelected/isSelected synonyms
+JCheckBoxMenuItem setSelected/isSelected synonyms
+JCheckBox alignment
+JRadioButton alignment
+JPanel now implements scrollable
+SoftBevelBorder has complete implementation
+JTable changeSelection
+ListCellRenderer and JList cell rendering
+TableColumn modelIndex
+JMenu removeAll
+JTableHeader basic support
+JScrollBar stub class for use by JScrollPane
+Containers default to FlowLayout (as Swing does)
+Fix to event dispatch thread to make sure it transfers between frames as they open/close
+JTabbedPane/ClosableTabbedPane now handle automatic layouts between switches for complex frames
+
+==== 0.75
+
+13 Dec
+JTree Expansion/Selection events
+Title support for JFileChooser
+JFileChooser/ColorChooser in Swing demo as well now for parity
+ButtonGroup/Model support and corrected Radio/Check/Button hierarchy to match Swing
+   through AbstractButton (with Change/ItemEvent)
+
+12 Dec
+AWT HeadlessException
+JColorChooser
+JFileChooser (basic support - no accessory/FileFilter)
+
+11 Dec
+JComboBox and JList now store Object data items (like Swing) - you are no longer 
+  stuck with plain strings.
+JTree setModel()/getModel() methods (thanks to Sachin Hadke)
+
+10 Dec
+Proper JInternalFrame closing events and closable tabbed JInternalFrames! New
+  MDI demo added to bin folder
+Keyboard focus management! awt.KeyboardFocusManager is implemented and swing.FocusManager
+  not completely, but enough to handle custom tab traversal
+
+9 Dec
+JPopupMenu.show() now works correctly (doesn't rely on right-click any more)
+Correct visible property handling for JMenuBar/JPopupMenu
+PopupMenu events for JPopupMenu and JComboBox
+
+8 Dec
+Fixed broken window events (mapped accidently to ActionEvent)
+Correct SWT constants for JDialog/JWindow
+Constructor sets for JFrame/JDialog/JWindow
+DefaultCloseOperation implemented correctly for JWindow descendants (added to demos)
+SwingUtilities threaded methods implemented (actually using dispatch thread)
+Added WindowEvent test to demo
+Attempt to force finalization/gc on shutdown to try our best not to lose manually
+  created OS resources (Font/Color/Graphics)
+Added ItemEvent implementation with triggers from JRadioButton, JCheckBox, and their
+  matching menu components.
+Colour support for custom cell renderers on JTree/JTable
+
+4 Dec
+AWT WindowEvent implemented. Window/JWindow hierarchy corrected
+JInternalFrame events implemented
+Correct source identification for component events (SwingWT obj instead of SWT peer)
+
+3 Dec
+Renamed swingwtx.swing.Utils to swingwtx.swing.SwingWTUtils to avoid conflicts (I use Utils in other packages)
+AWT event adapters not implementing their appropriate listener interface - what the hell was I thinking?
+JInternalFrame methods for maximised, iconified, resizable and pack()
+JTabbedPane methods for get/setTitle and tab placement
+
+==== 0.74
+
+2 Dec
+Temp file management for JEditorPane.setText() - fixes Mozilla crashes, is session based and cleanly
+  removes temp files for a given program/user/session.
+JScrollPane fix for containers needing a layout modifier
+JScrollPane fix for bad accessor on parent variable
+Automatic event dispatching by default (you can still turn it off and go the old way if you like)
+Dual licencing with the LGPL
+Window/Dialog appear correctly - rearranged component hierarchy
+Fixed incorrect copyright year range (whoops - cut and paste from a previous project)
+
+1 Dec
+Change to browser demo to supply some HTML in code if no args passed
+(fails to start if no valid connection is available otherwise)
+java.awt.Cursor implemented with support in Component (also added to demo)
+finalize() implementation corrected for Font, Cursor and Graphics
+UIManager/LookAndFeel implementation (no plaf support)
+Display was being incorrectly disposed on JFrame/Dialog/Window destruction
+
+30 Nov
+Swing/SwingWT browser demo now included
+Further fixes to JEditorPane
+Additional java.awt.Color constants
+Columns value for JTextField
+setPage/Editable for JEditorPane and correct IO exceptions thrown
+Toolkit.getToolkit() for AWT
+Fuller showMessageDialog on JOptionPane
+
+29 Nov
+Altered Swing components to descend JComponent, allowing borders, etc.
+Default contentPane() now sets itself to BorderLayout
+[Thanks to Diane Trout -->]
+AbstractButton implementation with correct ActionCommand handling
+for ActionEvent.
+setListData() methods for Object[] array and vector on JList
+Additional JSplitPane methods
+
+28 Nov
+Removed JEditorPane from main demo
+
+27 Nov
+Upgrade to SWT 3.0M5
+Preliminary JEditorPane/HTMLEditorKit support
+
+==== 0.73
+
+27 Nov
+Fix to value object sent in TreeCellRenderer
+Accelerators display on menu items automatically now
+
+26 Nov
+Improved compatibility for table/tree cell renderers
+Fixed bug in JTable.setModel()
+Swing border compatibility
+Icon interface
+JInternalFrame/JDesktopPane frame destruction bug fixed
+
+25 Nov
+JScrollPane setViewportView() added
+JTable row/col selection compatibility methods
+Better AWT compatibility through Component/Container
+
+24 Nov
+setIconImage method fixed in JFrame/JDialog
+Added Swing based demo for comparison
+Ant build script
+Removed NetBeans .jarContent
+FAQ
+getName()/setName() component support for some UI builder tools
+
+===== 0.72
+
+19 Nov
+AWT support - Button, CheckBox, Choice, Dialog, Frame, Label, List, Menu, MenuBar, MenuItem,
+PopupMenu, Panel, ScrollPane, TextArea, TextField, Window
+JWindow support
+AWT Toolkit support
+Basic Text/Clipboard support
+Custom cell rendering support for JTable and JTree
+
+18 Nov
+JCheckBoxMenuItem and JRadioButtonMenuItem support
+Keyboard accelerator support for menu items and correctly mapped KeyEvent/InputEvent
+JSeparator support
+Container remove support for all Menu/Component containers
+GridBagLayout support (complete interface, but basic layout)
+
+===== 0.71
+
+13 Nov
+Proper JScrollPane support, with mappings to JTextArea,
+JTable, JTree and JList.
+Nice bin folder with demo shortcuts for Windows and Linux.
+SWT now packaged with the library for convenience.
+Better table width column handling under Win32
+Menu enabler fix for Win32
+
+12 Nov
+JSplitPane support (thanks to Jack Park)
+correct getContentPane() support in JFrame and JDialog
+getViewport() support for JScrollPane

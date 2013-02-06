@@ -1,0 +1,219 @@
+SwingWT - Frequently Asked Questions (FAQ)
+===========================================
+
+Q. Couldn't you have used the java.awt.*/javax.swing.* package names? I have
+   to search/replace all my code before I can use this stuff!
+
+A. Yes and No. Yes, technically it can be done, but it requires deployment to
+   jre/lib/endorsed for javax.* packages (making it tougher to deploy apps). 
+   Other disadvantages are that the default Sun classloader will refuse to load 
+   anything starting with java.* (so you need to override the classloader),
+   and the worry that classes might get merged from the real AWT/Swing.
+
+   You can also use various Java pre-processors or Ant to change your code
+   at build time for you.
+
+   If you are a Win32 developer, the ThisIsCool MingW GCJ
+   project gives you a native Win32 development toolchain that already
+   uses SwingWT as the AWT/Swing implementation.
+
+   If you are using a free virtual machine (such as Kaffe, SableVM, GIJ or
+   IKVM), the SwingWT build script allows you to build it with 
+   java.awt/javax.swing packages by specifying "ant -Dsun=no" at build time. 
+   You can then use the -bootclasspath parameter to load SwingWT prior to your 
+   VM's class libraries to have it override any existing AWT/Swing
+   implementation.
+
+   SwingWT now includes a classloader (borrowed from the WebOnSwing project
+   at http://webonswing.sf.net) which will dynamically switch Swing for
+   SwingWT on existing programs. See the swingwtbootstrap and
+   linux_replaceswing_runswingdemo.sh scripts in the bin directory for a
+   working example with a swing demo that uses SwingWT at runtime.
+
+=============
+
+Q. Why didn't you implement this as Swing UI delegates?
+
+A. I have to admit to not being enough of an expert to know if this is possible
+   for sure. As long as you can abstract away the rendering of a component as
+   part of an L&F (which I assume you can), then yes, it's possible.
+
+   The reason I didn't even consider it is that I wanted this for building apps
+   with GCJ (which lacks a complete Swing implementation) - I therefore had to
+   assume that I had nothing and was basically reimplementing Swing from
+   scratch.
+
+   This does have the other rather nice side-effect that SWT is currently making
+   waves in the J2ME world (because of its lightweight size) - this means that
+   you can use SwingWT for your mobile applications!
+ 
+===============
+
+Q. Can I use SwingWT to use a Swing like API over SWT containers (Eclipse
+   plugins)?
+
+A. Yes you can - although SwingWT closely resembles the Swing/AWT APIs, you can
+   access the SWT widgets with a call to getSWTPeer() for any component and
+   getComposite() for any container. This works two ways, and you can wrap
+   up an existing SWT widget with a SwingWT one.
+
+   To add a SwingWT container (eg: JPanel) to an SWT container, simply
+   create the SWT container, then create a new swingwt.awt.Container object
+   and assign the SWT container to it. You can then treat it like any
+   other Swing container. Eg:
+
+   // If you are creating an Eclipse plugin, tell SwingWT
+   // before doing anything so it knows to use the already
+   // registered SWT event handler instead of creating it's own
+   SwingWTUtils.setEclipsePlugin(true);
+
+   // Create a new SWT shell to use as a container
+   // -------
+   Shell shell = new Shell();
+   shell.setLayout(new org.eclipse.swt.layout.FillLayout());
+
+   // Map it to a SwingWT container so we can use our Swing-like 
+   // components with it
+   // -------
+   swingwt.awt.Container container = new swingwt.awt.Container();
+   container.composite = shell;
+
+   // Add components to it as normal
+   // -------
+   container.add(<your SwingWT components>)
+
+============
+
+Q. The browser demo isn't working on my Linux box! I get an SWT error thrown
+   saying "No More Handles"
+
+A. The SWT browser kit requires the following:
+
+   1. Mozilla 1.4 - 1.7 with GTK2/XFT and GRE support
+   2. The environment variable LD_LIBRARY_PATH must include the
+      mozilla installation directory (eg: /usr/lib/mozilla)
+   3. The environment variable MOZILLA_FIVE_HOME must be set to
+      the mozilla installation directory (eg: /usr/lib/mozilla)
+      
+=============
+
+Q. Is SwingWT compatible with third party AWT/Swing layout managers?
+
+A. Yes - as long as you have the source code and you can recompile the
+   manager after changing the java.awt/javax.swing imports.
+
+=============
+
+Q. I need clipboard support and you don't have it in SwingWT yet!
+
+A. Basic (String) clipboard support is present in SwingWT, however you can
+   continue to use the java.awt.datatransfer package as it is non-visual
+   without any issue at all. The only downside is when using GIJ/GCJ as
+   their implementation of java.awt.datatranasfer is incomplete (Kaffe
+   should be ok).
+   
+   Also note that descendants of JTextComponent (JEditorPane, JTextField,
+   JPasswordField, JTextArea, JTextPane) all support cut(), copy() and
+   paste() methods which do work correctly in SwingWT.
+
+=============
+
+Q. How can I prevent the copyright message for SwingWT being dumped to
+   stdout at startup?
+
+A. Before you do anything with SwingWT in your code, do: 
+   swingwtx.swing.SwingWTUtils.setShowSwingWTInfoOnStartup(false)
+   to turn it off.
+
+=============
+
+Q. Feature X is missing/I want to implement feature X - can you help?
+
+A. That's great! However please don't do the following:
+
+   * Send me verbatim lumps of Sun's code from the JDK - I can only
+     accept patches that are your own work (it says "SUN PROPRIETARY
+     AND CONFIDENTIAL" on the top of their source files for a reason!)
+
+   * Send me your own code with Sun's javadoc comments. We don't
+     want legal recriminations and since I'll point them in the author's
+     direction it's for your own good! :)
+     
+   * Whine petulantly at me because your program needs some obscure
+     AWT/Swing feature that SwingWT is missing and you don't know where
+     to begin implementing it yourself. Just politely let me know so
+     I can add it to the TODO list.
+
+=============
+
+Q. How do I build SwingWT with GCJ?
+
+A. An old Makefile for GCJ is supplied in the "deprecated" folder of the 
+   SwingWT distribution. Note that you will need the "unzip" and GNU find 
+   utilities (and of course GCJ) for it to work. You'll also need to
+   grab the source for your SWT library, patch it, extract the shared
+   objects from the JAR and edit the makefile accordingly. I stopped
+   using this a while ago and since I didn't get any questions, had enough
+   of maintaining it.
+
+   Win32 users can either use Cygwin to run a modified version of the Linux
+   build script with MingW, or use the MingW build at 
+   www.thisiscool.com/gcc_mingw.htm for a pre-built SwingWT/SWT.
+
+=============
+
+Q. This is the only free Swing implementation there is - you must be loaded
+   and have people offering you jobs left right and center!
+
+A. I assure you I'm quite poor and have had nothing from making SwingWT except
+   the excitement of making it and the cool people I've spoken to (and who've
+   helped) as a result. Contrary to what you've read elsewhere on the web,
+   this is not some big company sponsored project (people seem to think IBM
+   are in on this) - I'm just one guy and I do this in my spare time (and with
+   the help of occasional volunteers who have donated bits of code). 
+
+=============
+
+Q. I can't use SwingWT for my application because it's not "free enough" 
+
+A. I assume you are talking about the CPL. With SWT:
+   
+   1. Nobody can take the code off you and prevent you from using it
+   2. You can modify and redistribute the code as you like
+   3. You can redistribute binary packages with your applications
+   4. Your app doesn't become CPL just because you are using SWT
+
+   That's good enough for me.
+
+=============
+
+Q. The SwingWT demos work fine, but my applications don't work on MacOS X?
+
+A. The Java threading model is fundamentally broken in MacOSX and it requires
+   the SWT event loop to run on the main thread (SwingWT spawns a new dispatch
+   thread on other platforms).
+
+   You can get around this by:
+
+   1. In the main method for your program, call initialiseMacOSX() with your
+      startup code called from a new Runnable.
+
+      public static void main(String[] args) {
+          if (SwingWTUtils.isMacOSX()) {
+	      SwingWTUtils.initialiseMacOSX(new Runnable() {
+	          public void run() {
+		      runMyStartupCode();
+		  }
+              });
+	  }
+	  else
+	      runMyStartupCode();
+      }
+      
+      This code will work with other platforms since it just calls the startup
+      code as normal if you are not running under Mac OS X.
+
+   2. Pass the -XstartOnFirstThread argument to the Mac JVM.
+
+      See SwingWT/bin/macosx_rundemo.sh for an example.
+  

@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="SwingWT" default="build" basedir=".">
+
+	<!--
+		SwingWT
+		Copyright(c)2003, 2004 R. Rawson-Tetley
+		and other contributors.
+
+		Ant build script.
+
+		Targets:
+
+		[default] 		Builds swingwt.jar and demos.jar
+		init			Removes existing jars and creates classes build folder
+		compile			Compiles the SwingWT core classes
+		compiledemos		Compiles the SwingWT demo classes
+		build			Makes demos.jar and swingwt.jar from built classes
+		clean			Removes temporary classes build folder
+		create_sun_packages	Makes javax/java source folders, copies swingwt code and changes package names
+		create_swingwt_packages	Copies code from javax/java back to swingwtx/swingwt
+		testmauve		Downloads the latest version of mauve and tests SwingWT against it
+		test			Tests SwingWT against it's JUnit tests. Make sure junit.jar is in $ANT_HOME/lib
+	
+	-->
+
+	<description>SwingWT build script</description>
+
+    <!-- Allow any user specific values to override the defaults -->
+    <property file="${user.home}/build.properties" />
+  
+    <!-- Allow user defaults for this project -->
+    <property file="build.properties" />
+
+	<!-- global properties-->
+	
+	<!-- build directories for asm and it's installers -->
+	<property name="build" location="classes"/>
+	
+	<!-- compile with jikes - if you have a Linux box, this
+	is loads faster than Sun's crappy javac :-) 
+	
+	Comment this out if you don't have jikes or want to
+	use regular old javac
+	-->
+	<!--property name="build.compiler" value="jikes"/-->
+
+	<!-- Set the package names to the java/javax namespace if the "sun" property is set -->
+	<condition property="swingwtx" value="javax">
+		<isset property="sun"/>
+	</condition>
+	<condition property="swingwt" value="java">
+		<isset property="sun"/>
+	</condition>
+
+	<!-- Set the package names to the swingwt/swingwtx namespace if the "sun" property is not set -->
+	<condition property="swingwtx" value="swingwtx">
+		<not> <isset property="sun"/> </not>
+	</condition>
+	<condition property="swingwt" value="swingwt">
+		<not> <isset property="sun"/> </not>
+	</condition>
+
+	<target name="init_packages" if="sun">
+		<antcall target="create_sun_packages"/>
+	</target>
+
+
+	<!-- TARGET:   init
+	     Initialisation
+	-->
+	<target name="init" depends="clean,init_packages">
+		<tstamp/>
+	
+		<!-- Create the built classes folder -->
+		<mkdir dir="${build}"/>
+
+		<!-- Clean out temporary files left by NetBeans and 
+		     other editors - files ending in ~, and .class
+		     files -->
+		<delete>
+			<fileset dir="." defaultexcludes="no">
+				<include name="**/*~"/>
+				<include name="**/*.class"/>
+				<include name="**/*.o"/>
+			</fileset>	
+		</delete>
+
+		<!-- Remove existing jars -->
+		<delete>
+			<fileset dir="lib">
+				<include name="swingwt.jar"/>
+				<include name="demos.jar"/>
+				<include name="tests.jar"/>
+			</fileset>
+		</delete>
+
+
+	</target>
+
+
+	<!-- TARGET:   compile
+             Compiles SwingWT itself
+ 	-->     
+	<target name="compile14" depends="init" description="compile SwingWT" if="v14">
+
+		<!-- SwingWT for Swing in JDK 1.4 compatibility -->
+		<!-- Compile from src to bin -->
+		<javac srcdir="src" 
+		       destdir="${build}"
+		       deprecation="on"
+		       debug="true"
+		       target="1.4"
+		       source="1.4"
+		       verbose="off">
+		       <bootclasspath>
+			       <path location="${swingwtx}"/>
+			       <path location="${swingwt}"/>
+			       <path location="${java.home}/lib/rt.jar"/>
+		       </bootclasspath>
+		       <classpath>
+			       <path location="lib/linux_gtk2/swt.jar"/>
+			       <path location="lib/linux_gtk2/swt-pi.jar"/>
+			       <path location="lib/linux_gtk2/swt-mozilla.jar"/>
+			       <path location="lib/jface.jar"/>
+			       <path location="lib/gef_libs/draw2d.jar"/>
+			       <path location="lib/gef_libs/gef.jar"/> 
+			       <path location="lib/bcel.jar"/>
+			       <path location="lib/commons-lang.jar"/>
+			</classpath>
+		       <!--<include name="demo/**"/>-->
+		       <include name="${swingwtx}/**"/>
+		       <include name="${swingwt}/**"/>
+		</javac>
+
+	</target>
+
+	<target name="compile15" depends="init" description="compile SwingWT" if="v15">
+
+		<!-- SwingWT for Swing in JDK 1.5 compatibility -->
+		<!-- Copy src to a temporary src folder, then 1.5 sources over the top -->
+		<delete dir="srctmp" />
+		<mkdir dir="srctmp" />
+		<copy todir="srctmp">
+			<fileset dir="src" />
+		</copy>
+		<copy todir="srctmp" overwrite="true">
+			<fileset dir="src15" />
+		</copy>
+		<!-- Compile from srctmp to bin -->
+		<javac srcdir="srctmp" 
+		       destdir="${build}"
+		       deprecation="on"
+		       debug="true"
+		       target="1.5"
+		       source="1.5"
+		       verbose="off">
+		       <bootclasspath>
+			       <path location="${swingwtx}"/>
+			       <path location="${swingwt}"/>
+			       <path location="${java.home}/lib/rt.jar"/>
+		       </bootclasspath>
+		       <classpath>
+			       <path location="lib/linux_gtk2/swt.jar"/>
+			       <path location="lib/linux_gtk2/swt-pi.jar"/>
+			       <path location="lib/linux_gtk2/swt-mozilla.jar"/>
+			       <path location="lib/jface.jar"/>
+			       <path location="lib/gef_libs/draw2d.jar"/>
+			       <path location="lib/gef_libs/gef.jar"/> 
+			       <path location="lib/bcel.jar"/>
+			       <path location="lib/commons-lang.jar"/>
+			</classpath>
+		       <!--<include name="demo/**"/>-->
+		       <include name="${swingwtx}/**"/>
+		       <include name="${swingwt}/**"/>
+		</javac>
+		<!-- Destroy the scratch folder -->
+		<delete dir="srctmp" />
+	</target>
+
+	<!-- TARGET:	compiledemos
+	     Compiles the SwingWT demos
+	-->
+	<target name="compiledemos" description="compile SwingWT demos">
+		<javac srcdir="src"
+		       destdir="${build}"
+		       deprecation="on"
+		       verbose="off">
+		       <classpath>
+		        	<path location="lib/linux_gtk2/swt.jar"/>
+				<path location="lib/linux_gtk2/swt-pi.jar"/>
+				<path location="lib/linux_gtk2/swt-mozilla.jar"/>
+				<path location="lib/swingwt.jar"/>
+			</classpath>
+			<include name="demo/**"/>
+		</javac>
+	</target>
+
+	<!-- TARGET:   build
+	     Generates the swingwt.jar file of compiled classes.
+	     Cleans up and then compiles demos jar as well.
+	-->
+	<target name="build" depends="compile14,compile15" description="Generate jars">
+		
+		<copy todir="${build}/${swingwtx}/custom/validation">
+			<fileset dir="src/${swingwtx}/custom/validation">
+				<include name="*.gif"/>
+				<include name="*.png"/>
+			</fileset>
+		</copy>
+		<copy todir="${build}/${swingwtx}/swing/filechooser">
+			<fileset dir="src/${swingwtx}/swing/filechooser">
+				<include name="*.gif"/>
+				<include name="*.png"/>
+			</fileset>
+		</copy>
+                <copy todir="${build}/${swingwtx}/swing/tree">
+			<fileset dir="src/${swingwtx}/swing/tree">
+				<include name="*.gif"/>
+				<include name="*.png"/>
+			</fileset>
+		</copy>
+		<copy todir="${build}/${swingwtx}/swing/">
+			<fileset dir="src/${swingwtx}/swing">
+				<include name="*.gif"/>
+				<include name="*.png"/>
+			</fileset>
+		</copy>
+
+		<!-- Build the swingwt.jar file from build -->
+		<jar jarfile="lib/swingwt.jar" basedir="${build}">
+		</jar>
+
+		<!-- Compile the demos -->
+		<mkdir dir="${build}" />
+		<antcall target="compiledemos"/>
+		
+		<!-- Copy the demo image resources across from the source -->
+		<copy todir="${build}/demo">
+			<fileset dir="src/demo">
+				<include name="*.png"/>
+				<include name="*.gif"/>
+			</fileset>
+		</copy>
+
+		<!-- Jar up the demos -->
+		<jar jarfile="lib/demos.jar" basedir="${build}" includes="demo/**">
+					<manifest>
+				<attribute name="Main-Class"
+					   value="demo.Everything" />
+			</manifest>
+		</jar>
+
+	</target>
+
+	<!-- TARGET:    clean
+	     Removes temporary directories made during build.
+	-->
+	<target name="clean" description="clean up">
+		<!-- Delete the built classes folder -->
+		<delete dir="${build}"/>
+	</target>
+
+    <!-- Create java/javax version of swingwt/swingwtx packages -->
+    <target name="create_sun_packages" description="Create java/javax package namespace">
+        <copy todir="src/javax" flatten="false" overwrite="true">
+            <fileset dir="src/swingwtx" includes="**"/>
+        </copy>
+        <copy todir="src/java" flatten="false" overwrite="true">
+            <fileset dir="src/swingwt" includes="**"/>
+        </copy>
+        <replace dir="src/javax" token="/swingwtx/" value="/javax/"/>
+        <replace dir="src/javax" token="/swingwt/" value="/java/"/>
+        <replace dir="src/javax" token="swingwtx." value="javax."/>
+        <replace dir="src/javax" token="swingwt.awt" value="java.awt"/>
+        <replace dir="src/javax" token="swingwt.applet" value="java.applet"/>
+        <replace dir="src/java" token="/swingwtx/" value="/javax/"/>
+        <replace dir="src/java" token="/swingwt/" value="/java/"/>
+        <replace dir="src/java" token="swingwtx." value="javax."/>
+        <replace dir="src/java" token="swingwt.awt" value="java.awt"/>
+        <replace dir="src/java" token="swingwt.applet" value="java.applet"/>
+    </target>
+
+    <!-- Create swingwt/swingwtx version of java/javax packages -->
+    <target name="create_swingwt_packages" description="Create swingwt/swingwtx package namespace">
+        <copy todir="src/swingwtx" flatten="false" overwrite="true">
+            <fileset dir="src/javax" includes="**"/>
+        </copy>
+        <copy todir="src/swingwt" flatten="false" overwrite="true">
+            <fileset dir="src/java" includes="**"/>
+        </copy>
+        <replace dir="src/swingwtx" token="/javax/" value="/swingwtx/"/>
+        <replace dir="src/swingwtx" token="/java/" value="/swingwt/"/>
+        <replace dir="src/swingwtx" token="javax." value="swingwtx."/>
+        <replace dir="src/swingwtx" token="java.awt" value="swingwt.awt"/>
+        <replace dir="src/swingwtx" token="java.applet" value="swingwt.applet"/>
+        <replace dir="src/swingwt" token="/javax/" value="/swingwtx/"/>
+        <replace dir="src/swingwt" token="/java/" value="/swingwt/"/>
+        <replace dir="src/swingwt" token="javax." value="swingwtx."/>
+        <replace dir="src/swingwt" token="java.applet" value="swingwt.applet"/>
+        <replace dir="src/swingwt" token="java.awt" value="swingwt.awt"/>
+    </target>
+
+    <!-- Runs the JUnit tests -->
+    <target name="test" depends="build">
+
+	<!-- Compile and build JUnit tests into tests.jar -->
+    	<javac srcdir="." 
+		       destdir="${build}"
+		       deprecation="on"
+		       verbose="off">
+		       <classpath>
+		       	       <path location="lib/swingwt.jar"/>
+			       <path location="lib/linux_gtk2/swt.jar"/>
+			       <path location="lib/linux_gtk2/swt-pi.jar"/>
+			       <path location="lib/linux_gtk2/swt-mozilla.jar"/>
+			       <path location="lib/junit.jar"/>
+		       </classpath>
+		       <include name="test/swingwtx/**"/>
+	</javac>
+	<jar jarfile="lib/tests.jar" basedir="${build}" includes="test/**" />
+	<delete dir="${build}"/>
+	
+	<!-- Execute the tests -->
+        <junit printsummary="yes" fork="yes">
+	    <classpath>
+	        <path location="lib/swingwt.jar"/>
+		<path location="lib/linux_gtk2/swt.jar"/>
+		<path location="lib/linux_gtk2/swt-pi.jar"/>
+		<path location="lib/linux_gtk2/swt-mozilla.jar"/>
+		<path location="lib/tests.jar"/>
+		<path location="lib/demos.jar"/>
+	    </classpath>
+	    
+            <batchtest todir="test">
+	        <fileset dir=".">
+		    <include name="test/swingwtx/**" />
+		</fileset>
+		<formatter type="plain" />
+	    </batchtest>
+	</junit>
+    </target>
+
+    <!-- Run the Mauve test suite. -->
+    <target name="testmauve">
+        <!-- Recursively call ourself, forcing build with java/javax package names -->
+        <property name="sun" value="no"/>
+        <ant>
+            <propertyset id="build_props">
+                <propertyref name="sun"/>
+            </propertyset>
+        </ant>
+
+
+        <!-- Call the mauve build script -->
+        <ant antfile="mauve.xml" inheritAll="false"/>
+    </target>
+
+</project>

@@ -1,0 +1,143 @@
+This file contains details of showstopping bugs that need to be
+fixed prior to the next release, along with the current list
+of jobs that need to be done on SwingWT.
+
+The jobs are separated into AWT and Swing and given a priority
+from 1-3 ( 1 = High, 2 = Normal, 3 = If I can be bothered)
+
+====================================================
+URGENT BUGS TO BE FIXED BEFORE NEXT RELEASE: 
+====================================================
+
+*. Creating most components with a single string argument
+   (eg: JButton, JMenuItem, etc.) should set the action command
+   as well.
+
+*. MacOSX thread problems - spawning worker threads seems to orphan 
+   them and hang any program???
+
+*. ActionEvents should be spawned for AbstractButton descendants
+   when the item state changes (not just ItemEvents).
+
+====================================================
+KNOWN BUGS
+====================================================
+
+*. 2 If you add a Textarea to a JScrollpane by calling
+   JScrollpane.getViewport().add(txt), it isn't picked up as
+   a component that can handle it's own scrollbars. You
+   need to use the add() method of the JScrollpane (or
+   use setViewportView())
+
+*. 2 Vertical toolbars on MacOSX - problems with vertical 
+   orientation.
+
+*. 2 Layout with JSplitPanes
+    I'm adding a JEditorPane with some HTML content to a JSplitPane.
+    In old Swing, it used to automatically fill out the content
+    area.  With SwingWT, it just takes up a little corner of the
+    content area.
+    
+*. 2 DefaultListSelectionModel.SINGLE_SELECTION:
+    selection = new DefaultListSelectionModel ();
+    selection.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+    This throws a null pointer, because of
+    ListSelectionModel.SINGLE_SELECTION.
+    
+*. 2 ListSelectionListener returns JTable instead of ListSelectionModel
+
+====================================================
+
+====================================================
+JOBS THAT NEED DOING:
+====================================================
+ 
+AWT ================================================
+
+awt.Image.RGBImageFilter:
+	3 needs implementing
+
+awt.Font: 
+	1 needs work and support adding for LineMetrics/etc (lots of GC-type
+	support classes are in (like FontMetrics) - just need using).
+
+awt.dnd.*:
+	3 needs to be able to do something useful
+	
+awt.print.*:
+	3 Not implemented (no print interface on SWT/GTK2 at present)
+	
+awt.geom.*:
+	2 And other horrible Java2D stuff needs completing. Great big
+	holes in awt.SWTGraphics2DRenderer need doing to handle
+	abstract awt.Shape implementors.
+
+awt.event.InputEvent: 
+        2 InputEvent.getModifiersEx
+
+awt.event.ActionEvent:
+	2 ActionEvent.paramString
+
+awt.Window:
+        2 Window.removeWindowFocusListener
+        2 Window.addWindowFocusListener
+
+SWING ==============================================
+
+accessibility.AccessibleContext:
+	3 Need at least basic subclasses and descriptions
+
+swing.AbstractButton descendants
+	1 setBorderPainted(true) should use SWT.BORDER when
+	  creating the peer.
+
+swing.JEditorPane: 
+	1 scrollToReference(String) missing
+	1 getPage() missing
+
+swing.event.HyperLinkEvent
+	1 getSourceElement() missing
+	1 SimpleAttributeSet ?
+
+swing.event.InternalFrameAdapter
+	1 class is missing
+
+swing.tree.DefaultTreeSelectionModel
+        2 Needs tying into JTree and implementing properly
+
+swing.JFrame:
+	2 setAlwaysOnTop(boolean)/isAlwaysOnTop() - introduced
+	in Java 1.5, but useful (check that it really is a member
+	of JFrame and not Frame/Window)
+	2 setDefaultLookAndFeelDecorated stub
+
+swing.JFormattedTextField:
+	2 Needs implementing?
+
+swing.JOptionPane:
+        1 Currently tracks and stores instance information,
+          createDialog/createInternalFrame need to make sense
+          of this and create a JDialog
+
+swing.AbstractButton:
+        2 AbstractButton.doClick
+        2 AbstractButton.getIcon
+
+swing.JButton:
+        2 JButton.configurePropertiesFromAction
+
+swing.JToggleButton:
+        2 No constructor that accepts Action
+
+swing.JTabbedPane:
+        2 insertTab
+        2 setSelectedComponent
+        2 SCROLL_TAB_LAYOUT
+
+swing.JComponent:
+	1 setRectangleToVisible()
+        2 listenerList
+
+swing.SwingUtilities:
+        2 windowForComponent

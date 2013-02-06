@@ -1,0 +1,142 @@
+SwingWT VERSION 0.91
+The Swing API over SWT lib
+=============================
+
+Copyright(c)2003-2012, R. Rawson-Tetley
+
+Ok, this thing isn't complete - but it's not far off! Implementation of some 
+things may be inadequate and you may find some stuff missing. If you do, 
+*please* let me know.
+
+What this gives you is maybe 90% of the Swing/AWT API, some neat tricks and 
+the whole thing is simple, and pretty efficient (you lose a negligible amount 
+of performance and pay a small memory cost going through this wrapper, but of 
+course - you make it up with the native components, so that's ok :-))
+
+I made this because I wanted to be able to compile my apps natively under Linux
+with GCJ (which does not support Swing) and have access to GTK2. The SWT API is
+frankly (in my opinion) very poor, and I like Swing, I know Swing and I'm
+very happy with Swing - it just looks rubbish (again, in my opinion). It's just
+happy accident that what I also started was a completely free Swing 
+implementation.
+
+You can accomplish the same with Windows (native Java apps with the Win kit
+and GCJ). Go to http://www.thisiscool.com/gcc_mingw.htm for a complete
+compiler toolchain using SwingWT as the Swing and AWT implementation.
+
+There's probably a few bugs in there as well, so help me out if you can :-)
+
+Outstanding Items:
+=========================================================
+
+*. Printing support
+*. Drag and drop support
+*. Full Clipboard/DataTransfer support (needed for DnD)
+*. Probably other little bits that will get noticed eventually
+
+New Bits
+=============================================
+
+The following are useful items that people have either asked me for, or I 
+thought belonged in SwingWT, even though they aren't part of Swing. You don't 
+have to use them and I wouldn't recommend you do if you want Swing 
+compatibility. However - they give you some pretty neat stuff you wouldn't be
+able to get otherwise!
+
+*. JCoolBar - a Swing-like wrapper around platform CoolBar support (the coolbar
+   is a container generally used with multiple toolbars to allow them to be 
+   moved around)
+*. JClosableTabbedPane - a Swing wrapper with the same API as JTabbedPane but 
+   has a close button on the tabs, and you can catch close events.
+*. ValidationGroup - a full-fledged validation utility to allow you to have 
+   error icons appear as users type to show validation problems. Similar to the    
+   C# WinForms class called ErrorProvider.
+   Rather than breaking existing components, Validatable components have that 
+   prefix - eg: ValidatableJTextField, ValidatableJComboBox etc. Their 
+   interface remains the same.
+*. TableLayout - an AWT layout that works like an HTML table. It can also lay 
+   out components from top to bottom across the screen like newspaper columns.
+   Obviously, the source is supplied and is compatible with "real"
+   AWT/Swing (just change the imports)
+*. JLookupPopup - a fast alternative to JComboBox
+*. JTaskTrayItem - a component for creating icons with popup menus in the 
+   Windows tasktray/GNOME system notification area.
+
+Using in your applications
+==========================
+
+To use in your applications, add the swingwt.jar lib to your classpath and do a
+search and replace. You want to replace all occurrences of javax.swing with 
+swingwtx.swing, and java.awt with swingwt.awt. That's it!
+
+You can use a preprocessor, bytecode assembly, a sed/grep script or even a 
+simple Ant token replace to do this.
+
+Of course, (Linux) you'll need the swt.jar referenced in your classpath (and
+the appropriate 3/5 .so files in your lib path) so the library can access SWT.
+Windows users just need swt.jar on the classpath. See the bin directory for
+example startup scripts/batch files.
+
+Building a Swing/AWT Replacement
+================================
+
+The Ant script supplied with SwingWT is now capable of making java/awt and
+javax/swing packages for use with free virtual machines (such as Kaffe,
+SableVM and GIJ). To do this, set the "sun" property to no - eg:
+
+ant -Dsun=no
+
+The resulting swingwt.jar will contain java.awt/javax.swing packages
+instead. Use your VM's bootclasspath parameter to load swingwt.jar first to
+make it take precedence over any AWT/Swing implementation already in your VM's 
+class libraries.
+
+Java 1.5 specifics
+==================
+
+SwingWT has 1.5 support for certain Swing classes to match the Swing
+in JDK 1.5. To turn on this support, edit the build.properties file and
+uncomment the v15 line and comment out the v14 line.
+
+Building natively
+=================
+
+A deprecated native Makefile is supplied for GCJ. It's deprecated
+because I have had enough of maintaining it when I don't use it (and
+nobody else seems to be either). If anyone wants to resurrect it/use it
+you'll be needing to get the latest SWT source code, possibly patch it
+(see previous README files in lib directory for more info), extract the
+shared libraries from the JAR file and update the values in the Makefile
+(SWT build number, which shared libraries were in the JAR).
+
+Demo
+====
+
+A demo frame demonstrating some functionality can be seen by running the
+appropriate script for your platform in the bin directory. The same demo using 
+Swing is also available from this directory so you can compare. In addition, 
+there is a simple browser demonstration using Swing and SwingWT, an MDI demo 
+and a demonstration of the ErrorProvider class. SwingSet2 is also included, 
+running with SwingWT.
+
+Browser Note:
+=============
+To use JEditorPane under Linux/GTK2, you need Mozilla 1.4-1.7 - see the file 
+FAQ for further help. If you attempt to use JEditorPane without the machine 
+being setup correctly, instructions on how to do this will be sent to stdout.
+
+Help!
+=====
+
+Any help with coding/patches would be very much welcomed. Note also that I 
+develop under Linux/GTK2 so there may be some problems with other native kits 
+(I doubt it, but there might be).
+
+If this is not the project you are looking for, and you want portable SWT 
+(ie. Swing renderer for SWT), then there is a SourceForge project called 
+SWTSwing run by a nice bloke called Chris - that's probably what you want 
+(http://swtswing.sourceforge.net). 
+Have fun!
+
+Contact me at:
+robin@rawsontetley.org
