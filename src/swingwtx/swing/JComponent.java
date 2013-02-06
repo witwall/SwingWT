@@ -580,7 +580,7 @@ public class JComponent extends swingwt.awt.Container {
   		String info = (null != border) ? border.debugId() + " / " : "";
   		
   		if (null != layout) {
-  			info += layout.getClass().getSimpleName();
+  			info += layout.getClass().getName();//.getSimpleName();
   		}
   		
   		String name = super.debugId();

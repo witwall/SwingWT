@@ -14,7 +14,9 @@ public class FontList implements Runnable {
 	    Arrays.sort(fontnames);
 	    JPanel b = new JPanel();
 	    b.setLayout(new BoxLayout(b, BoxLayout.Y_AXIS));
-	    for (String f : fontnames) {
+/*	    for (String f : fontnames) {*/
+	    for(int i=0;i<fontnames.length;i++){
+	    	String f=fontnames[i];
 	    	Font font = new Font(f, Font.BOLD, 14);
 	    	JLabel l = new JLabel(MESSAGE + " (" + f + ")");
 	    	l.setFont(font);

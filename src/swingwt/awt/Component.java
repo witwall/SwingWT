@@ -78,8 +78,8 @@ public class Component implements ImageObserver, MenuContainer {
 	protected org.eclipse.swt.widgets.Composite ppeer = null;
 
 	/** The name of this component */
-	protected String componentName = this.getClass().getSimpleName();
-
+	protected String componentName = this.getClass().getName();//.getSimpleName();
+//this.getClass().getName().substring(this.getClass().getName().lastIndexOf(".")+1);
 	/** The graphics configuration */
 	protected static GraphicsConfiguration graphicsConfig = new GraphicsConfiguration();
 

@@ -52,4 +52,63 @@ public class ImageIO
     public static BufferedImage read(URL input) throws IOException {
         return read(input.openStream());
     }
+
+     
+	public static void write(BufferedImage image, String formatName, OutputStream output) throws IOException {
+        if (output == null) {
+            throw new IllegalArgumentException("output == null!");
+        }
+	    ImageLoader loader = new ImageLoader();
+	    loader.data = new ImageData[] {image.getSWTImage().getImageData()};
+	    loader.save(output, getFormat(formatName));
+	}
+	
+	public static void write(BufferedImage image, String formatName, File output) throws IOException {
+		write(image,formatName,new FileOutputStream(output));
+	}
+	
+	private static int getFormat(String format)
+	{
+		if(format.equalsIgnoreCase("dib")||format.equalsIgnoreCase("dib"))
+		{
+			return SWT.IMAGE_BMP;
+		}else if(format.equalsIgnoreCase("jpeg")||format.equalsIgnoreCase("jpg"))
+		{
+			return SWT.IMAGE_JPEG;
+		}else if(format.equalsIgnoreCase("rle"))
+		{
+			return SWT.IMAGE_BMP_RLE;
+		}else if(format.equalsIgnoreCase("ico"))
+		{
+			return SWT.IMAGE_ICO;
+		}else if(format.equalsIgnoreCase("png"))
+		{
+			return SWT.IMAGE_PNG;
+		}else if(format.equalsIgnoreCase("gif"))
+		{
+			return SWT.IMAGE_GIF;
+		}else if(format.equalsIgnoreCase("tif")||format.equalsIgnoreCase("tiff"))
+		{
+			return SWT.IMAGE_TIFF;
+		}
+		else
+			return SWT.IMAGE_UNDEFINED;
+/*		switch(format.toLowerCase())
+		{
+			case "dib":
+			case "bmp":return SWT.IMAGE_BMP;
+			case "rle":return SWT.IMAGE_BMP_RLE;
+			case "ico": return SWT.IMAGE_ICO;
+			case "jpeg":
+			case "jpg":return SWT.IMAGE_JPEG;
+			case "png":return SWT.IMAGE_PNG;
+			case "gif":return SWT.IMAGE_GIF;
+			case "tif":
+			case "tiff":return SWT.IMAGE_TIFF;
+		
+		}*/
+		
+	}
+	
+	    
 }

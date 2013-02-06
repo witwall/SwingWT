@@ -1195,7 +1195,8 @@ import swingwtx.swing.event.ChangeListener;
    	 * @return
    	 */
    	public String debugId() {
-   		StringBuilder b = new StringBuilder(super.debugId());
+   		//StringBuilder b = new StringBuilder(super.debugId());
+   		StringBuffer b=new StringBuffer(super.debugId());
    		
    		String text = getShowingText();
    		

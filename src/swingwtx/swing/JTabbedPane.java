@@ -238,7 +238,7 @@ public class JTabbedPane extends JComponent implements SwingConstants {
 
 		return ((Integer) SwingUtilities.sync(new SwingWTRunnable() {
 			public Object exec() {
-				return Integer.valueOf(ppeer.getItemCount());
+				return new Integer(ppeer.getItemCount());//Integer.valueOf(ppeer.getItemCount());
 			}
 		})).intValue();
 	}

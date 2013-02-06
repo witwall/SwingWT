@@ -48,7 +48,7 @@ public abstract class SwingWTUtils {
 	 * Whether or not to output information about SwingWT to stdout when
 	 * the library is loaded.
 	 */
-    private static boolean isDebug = true;
+    private static boolean isDebug = false;//true;
     
     /** SwingWT version */
     private final static String VERSION = "0.91 (20120206)";

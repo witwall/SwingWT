@@ -93,12 +93,12 @@ public class Frame extends Window implements MenuContainer {
     		return ((Integer) SwingUtilities.sync(new SwingWTRunnable() {
 	            public Object exec() {
 		            if (((Shell) peer).getMaximized())
-		                return Integer.valueOf(MAXIMIZED_BOTH);
+		                return new Integer(MAXIMIZED_BOTH);/*Integer.valueOf(MAXIMIZED_BOTH);*/
 		            
 		            if (((Shell) peer).getMinimized())
-		                return Integer.valueOf(ICONIFIED);
+		                return new Integer(ICONIFIED);//Integer.valueOf(ICONIFIED);
 		            
-		            return Integer.valueOf(NORMAL);
+		            return new Integer(NORMAL);//Integer.valueOf(NORMAL);
 	            }
 	        })).intValue();
         

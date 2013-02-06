@@ -34,7 +34,8 @@ public class LabelTypes implements Runnable {
         label.setText("Computer II");
         label.setIcon(new ImageIcon(getClass().getResource("Computer.png")));
 
-        ArrayList<Type> types = new ArrayList<Type>();
+        //ArrayList<Type> types = new ArrayList<Type>();
+        ArrayList types = new ArrayList();
         for (int v = 0; v < 3; v++)
             for (int h = 0; h < 3; h++)
                 types.add(new Type(v, h));
